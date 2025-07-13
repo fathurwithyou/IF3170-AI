@@ -1,6 +1,5 @@
 from .game import Game
 from ..adversarial_search import AdversarialSearch
-from ..strategy.alpha_beta import AlphaBetaStrategy
 
 
 class TicTacToe(Game):
@@ -76,13 +75,13 @@ class TicTacToe(Game):
                 print("---------")
 
 
-def play_interactive():
-    """Interactive game"""
+def play_interactive(strategy_name: str = "alphabeta"):
+    """Interactive game with strategy selection"""
     game = TicTacToe()
-    strategy = AlphaBetaStrategy()
-    ai = AdversarialSearch(game, strategy)
+    ai = AdversarialSearch(game)
+    ai.set_strategy(strategy_name)
 
-    print("TicTacToe Game")
+    print(f"TicTacToe Game (Strategy: {ai.get_strategy_name()})")
     print("You are X, AI is O")
 
     while not game.is_terminal():
@@ -117,4 +116,27 @@ def play_interactive():
 
 
 if __name__ == "__main__":
-    play_interactive()
+    import sys
+    from ..strategy_parser import StrategyParser
+
+    strategy_name = "alphabeta"
+
+    if len(sys.argv) > 1:
+        if sys.argv[1] in ["--help", "-h"]:
+            parser = StrategyParser()
+            available = parser.get_available_strategies()
+            print("TicTacToe Game with Strategy Selection")
+            print("Usage: uv run -m adversarial_search.games.tictactoe [strategy]")
+            print(f"Available strategies: {', '.join(available)}")
+            print("Example: uv run -m adversarial_search.games.tictactoe minimax")
+            sys.exit(0)
+        else:
+            strategy_name = sys.argv[1]
+
+    try:
+        play_interactive(strategy_name)
+    except ValueError as e:
+        print(f"Error: {e}")
+        parser = StrategyParser()
+        available = parser.get_available_strategies()
+        print(f"Available strategies: {', '.join(available)}")
