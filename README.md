@@ -4,7 +4,7 @@ This repository is driven by curiosity. Yes, only curiosity with dedication.
 
 ## Usage
 ```bash
-uv run -m <module-name>.<game_name>
+uv run -m <strategy-name>.<game-name>
 ```
 For example,
 ```bash
