@@ -1,9 +1,9 @@
-from ..hill_climb import HillClimb
+from .hill_climb import HillClimb
 
 
 class Sideways(HillClimb):
-    def __init__(self, state, max_steps=1000, sideways_limit=100):
-        super().__init__(state, max_steps)
+    def __init__(self, initial_state, max_steps=1000, sideways_limit=100, **kwargs):
+        super().__init__(initial_state, max_steps, **kwargs)
         self.sideways_limit = sideways_limit
         self.sideways_count = 0
 
@@ -20,12 +20,12 @@ class Sideways(HillClimb):
             self.state = best_neighbor
             self.sideways_count = 0
             return True
-        elif best_neighbor.value == current_value:
-            if self.sideways_count < self.sideways_limit:
-                self.state = best_neighbor
-                self.sideways_count += 1
-                return True
-            else:
-                return False
-        else:
-            return False
+        elif (
+            best_neighbor.value == current_value
+            and self.sideways_count < self.sideways_limit
+        ):
+            self.state = best_neighbor
+            self.sideways_count += 1
+            return True
+
+        return False

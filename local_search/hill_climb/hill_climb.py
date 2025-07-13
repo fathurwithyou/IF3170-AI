@@ -1,14 +1,15 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
+from ..search_algorithm import SearchAlgorithm
 
 
-class HillClimb(ABC):
+class HillClimb(SearchAlgorithm):
     """
     Base class for Hill Climbing algorithms.
     Assumes `state` has `neighbors` property and `value` attribute.
     """
 
-    def __init__(self, initial_state, max_steps=1000):
-        self.state = initial_state
+    def __init__(self, initial_state, max_steps=1000, **kwargs):
+        super().__init__(initial_state, **kwargs)
         self.max_steps = max_steps
         self.current_step = 0
 

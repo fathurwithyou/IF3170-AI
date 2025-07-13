@@ -1,8 +1,10 @@
 import random
-from abc import ABC, abstractmethod
+from abc import abstractmethod
+from ..search_algorithm import SearchAlgorithm
+from .cooling_strategy import ExponentialCooling
 
 
-class SimulatedAnnealing(ABC):
+class SimulatedAnnealing(SearchAlgorithm):
     """
     Simulated Annealing algorithm implementation.
     Uses temperature-based probability to accept worse moves.
@@ -15,14 +17,21 @@ class SimulatedAnnealing(ABC):
         cooling_rate=0.95,
         min_temperature=1e-8,
         max_steps=10000,
+        cooling_strategy=None,
+        **kwargs,
     ):
-        self.state = initial_state
+        super().__init__(initial_state, **kwargs)
         self.initial_temperature = initial_temperature
         self.temperature = initial_temperature
         self.cooling_rate = cooling_rate
         self.min_temperature = min_temperature
         self.max_steps = max_steps
         self.current_step = 0
+
+        if cooling_strategy is not None:
+            self.cooling_strategy = cooling_strategy
+        else:
+            self.cooling_strategy = ExponentialCooling(cooling_rate)
 
     @abstractmethod
     def acceptance_probability(self, energy_delta, temperature):
@@ -32,10 +41,13 @@ class SimulatedAnnealing(ABC):
         """
         pass
 
-    @abstractmethod
     def cool_down(self):
-        """Apply cooling schedule to reduce temperature."""
-        pass
+        """Apply cooling strategy to reduce temperature."""
+        self.temperature = self.cooling_strategy.cool(
+            self.temperature,
+            self.current_step,
+            initial_temperature=self.initial_temperature,
+        )
 
     def step(self):
         """

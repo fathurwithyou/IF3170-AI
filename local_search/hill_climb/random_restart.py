@@ -1,4 +1,4 @@
-from ..hill_climb import HillClimb
+from .hill_climb import HillClimb
 
 
 class RandomRestart:
@@ -21,3 +21,7 @@ class RandomRestart:
                 best_state_found = final_state
 
         return best_state_found
+
+    def step(self):
+        """Dummy step method for compatibility"""
+        return False

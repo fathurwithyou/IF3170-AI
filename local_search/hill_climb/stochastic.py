@@ -1,10 +1,10 @@
 import random
-from ..hill_climb import HillClimb
+from .hill_climb import HillClimb
 
 
 class Stochastic(HillClimb):
-    def __init__(self, state, max_steps=1000):
-        super().__init__(state, max_steps)
+    def __init__(self, initial_state, max_steps=1000, **kwargs):
+        super().__init__(initial_state, max_steps, **kwargs)
 
     def step(self):
         neighbors = self.state.neighbors
